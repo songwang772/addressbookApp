@@ -1,13 +1,13 @@
 package com.reece.addressbookapp.addressbook.manager;
 
 import com.reece.addressbookapp.addressbook.action.IAddressBookAction;
+import com.reece.addressbookapp.addressbook.action.impl.AddressBookActionImplement;
 import com.reece.addressbookapp.addressbook.action.impl.CustomerAddressBookActionImplement;
 import com.reece.addressbookapp.addressbook.action.impl.EmployeeAddressBookActionImplement;
 import com.reece.addressbookapp.addressbook.action.impl.PartnerAddressBookActionImplement;
 import com.reece.addressbookapp.addressbook.exception.AddressBookNotValidException;
 import com.reece.addressbookapp.addressbook.model.AddressBookType;
 import com.reece.addressbookapp.addressbook.model.AddressBook;
-import com.reece.addressbookapp.contact.exception.ContactExistException;
 import com.reece.addressbookapp.contact.model.Contact;
 
 import java.util.HashSet;
@@ -24,6 +24,7 @@ public class AddressBookManager {
 
     /**
      * Add contact
+     *
      * @param contractName
      * @param phoneNumber
      * @param type
@@ -43,6 +44,7 @@ public class AddressBookManager {
 
     /**
      * Remove contact
+     *
      * @param contact
      * @param addressBookName
      * @return
@@ -52,21 +54,44 @@ public class AddressBookManager {
         return getAddressBookByName(addressBookName).getContactList().remove(contact);
     }
 
+
+    /**
+     * Print out all contact in an address book
+     *
+     * @param addressBookName
+     * @return
+     * @throws AddressBookNotValidException
+     */
+    public String printAllContactsInAddressBook(String addressBookName) throws AddressBookNotValidException {
+        List<Contact> contactList = getAddressBookByName(addressBookName).getContactList();
+        StringBuffer res = new StringBuffer();
+        for (Contact test : contactList) {
+            res.append(test.toString());
+        }
+        return res.toString();
+    }
+
     /**
      * Get all contact in a address book
+     *
      * @param addressBook
      * @return
      */
-    public List<Contact> getAllContractInAddressBook(AddressBook addressBook) {
+    public List<Contact> getAllContractInAddressBook(String addressBook) throws AddressBookNotValidException {
+        return getAllContractInAddressBook(getAddressBookByName(addressBook));
+    }
+
+    private List<Contact> getAllContractInAddressBook(AddressBook addressBook) {
         return addressBook.getContactList();
     }
 
     /**
      * Get all unique contact in all of address books
+     *
      * @param addressBook
      * @return
      */
-    public Set<Contact> getContractInAllAddressBook(AddressBook addressBook) {
+    public Set<Contact> getContractInAllAddressBook() {
         Set<Contact> allUniqueContacts = new HashSet<Contact>();
         for (Map.Entry<String, AddressBook> entry : addressBookMap.entrySet()) {
             AddressBook item = entry.getValue();
@@ -106,7 +131,7 @@ public class AddressBookManager {
         } else if (AddressBookType.PARTNER.toString() == type) {
             addressBookAction = new PartnerAddressBookActionImplement();
         } else {
-            addressBookAction = new EmployeeAddressBookActionImplement();
+            addressBookAction = new AddressBookActionImplement();
         }
         return addressBookAction;
     }

@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class AddressBookActionImplement implements IAddressBookAction {
 
-    AddressBook addressBook = new CustomerAddressBook("");
+    AddressBook addressBook = new AddressBook("");
 
     public Set<Contact> getAllContacts() {
         return (Set<Contact>) addressBook.getContactList();
