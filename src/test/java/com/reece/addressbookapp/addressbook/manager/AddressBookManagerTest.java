@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.reece.addressbookapp.addressbook.exception.AddressBookNotValidException;
+import com.reece.addressbookapp.addressbook.model.AddressBook;
 import com.reece.addressbookapp.contact.model.Contact;
 import org.junit.After;
 import org.junit.Before;
@@ -94,10 +95,16 @@ class AddressBookManagerTest {
     /**
      * Acceptance criteria #4: Users should be able to maintain multiple address books
      */
-//    @Test
-//    public void maintainMultipleAddressBooksTest() {
-//
-//    }
+    @Test
+    public void maintainMultipleAddressBooksTest() {
+
+        // Assert the existence of all address books
+        List<AddressBook> books = manager.getAllAddressBook();
+
+        assertTrue(books.contains("customer"));
+        assertTrue(books.contains("partner"));
+        assertTrue(books.contains("work"));
+    }
 
     /**
      * Acceptance criteria #5: Users should be able to print a unique set of all
