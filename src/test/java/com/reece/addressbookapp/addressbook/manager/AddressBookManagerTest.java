@@ -44,7 +44,7 @@ class AddressBookManagerTest {
      * Acceptance criteria #1: Users should be able to add new contact entries
      */
     @Test
-    public void addContactTest() {
+    public void addContactTest() throws AddressBookNotValidException {
 
         try {
             manager.addContact("test", "000","customer","customer");
@@ -52,8 +52,7 @@ class AddressBookManagerTest {
             e.printStackTrace();
         }
 
-        assertTrue(manager.getContractInAllAddressBook().contains(new Contact("test","000")));
-        assertTrue(false);
+        assertTrue(manager.getAllContactInAddressBook("customer").contains(new Contact("test","000")));
     }
 
     /**
@@ -67,7 +66,7 @@ class AddressBookManagerTest {
             e.printStackTrace();
         }
 
-        Set<Contact> contacts = manager.getContractInAllAddressBook();
+        Set<Contact> contacts = manager.getUniqueContactInAllAddressBook();
         assertFalse(contacts.contains(new Contact("test","000")));
     }
 
@@ -77,16 +76,16 @@ class AddressBookManagerTest {
     @Test
     public void getContactsInAdressBookTest() throws AddressBookNotValidException {
 
-        List<Contact> customer = manager.getAllContractInAddressBook("customer");
+        List<Contact> customer = manager.getAllContactInAddressBook("customer");
         assertTrue(customer.contains(new Contact("test1","000")));
         assertTrue(customer.contains(new Contact("test1","111")));
 
-        List<Contact> partner = manager.getAllContractInAddressBook("partner");
+        List<Contact> partner = manager.getAllContactInAddressBook("partner");
         assertTrue(partner.contains(new Contact("test3","000")));
         assertTrue(partner.contains(new Contact("test4","222")));
 
 
-        List<Contact> work = manager.getAllContractInAddressBook("work");
+        List<Contact> work = manager.getAllContactInAddressBook("work");
         assertTrue(work.contains(new Contact("test5","000")));
         assertTrue(work.contains(new Contact("test6","333")));
 
@@ -110,8 +109,19 @@ class AddressBookManagerTest {
      * Acceptance criteria #5: Users should be able to print a unique set of all
      * contacts across multiple address books
      */
-//    @Test
-//    public void uniqueContactsInAllAddressBooksTest() {
-//    }
+    @Test
+    public void uniqueContactsInAllAddressBooksTest() throws AddressBookNotValidException {
+
+
+        Set<Contact> preContactNumber = manager.getUniqueContactInAllAddressBook();
+
+        // add duplicated contact, then check contacts
+        manager.addContact("test5", "000","EMPLOYEE","work");
+        manager.addContact("test6", "111","EMPLOYEE", "work");
+
+        Set<Contact> afterContactNumber = manager.getUniqueContactInAllAddressBook();
+
+        assertEquals(preContactNumber, afterContactNumber);
+    }
 
 }
